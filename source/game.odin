@@ -19,10 +19,10 @@ init :: proc() {
 }
 
 update :: proc() {
-	game_state_update(&game_state)
+	game_state_update(&game_state, raylib.GetFrameTime())
 	raylib.BeginDrawing()
 	raylib.ClearBackground(raylib.RAYWHITE)
-	raylib.BeginMode3D(game_state.player.camera)
+	raylib.BeginMode3D(game_state.camera)
 	raylib.DrawGrid(20, 1.0)
     raylib.DrawCube({0.0, 1.0, 0.0}, 2.0, 2.0, 2.0, raylib.BLUE)
     raylib.DrawCubeWires({0.0, 1.0, 0.0}, 2.0, 2.0, 2.0, raylib.DARKBLUE)
