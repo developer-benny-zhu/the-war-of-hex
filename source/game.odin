@@ -24,12 +24,15 @@ update :: proc() {
 	raylib.ClearBackground(raylib.RAYWHITE)
 	raylib.BeginMode3D(game_state.world_camera)
 	raylib.DrawGrid(20, 1.0)
-    raylib.DrawCube({0.0, 1.0, 0.0}, 2.0, 2.0, 2.0, raylib.BLUE)
-    raylib.DrawCubeWires({0.0, 1.0, 0.0}, 2.0, 2.0, 2.0, raylib.DARKBLUE)
+	raylib.DrawCube({0.0, 1.0, 0.0}, 2.0, 2.0, 2.0, raylib.BLUE)
+	raylib.DrawCubeWires({0.0, 1.0, 0.0}, 2.0, 2.0, 2.0, raylib.DARKBLUE)
 	raylib.EndMode3D()
 
+
+	update_view_model_animation(&game_state.view_model, game_state.player, raylib.GetFrameTime())
+
 	raylib.BeginMode3D(game_state.view_model_camera)
-	draw_view_model(.Blaster_A, game_state.assets)
+	draw_view_model(game_state.view_model, game_state.assets)
 	raylib.EndMode3D()
 
 	raylib.EndDrawing()

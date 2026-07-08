@@ -11,6 +11,7 @@ Game_State :: struct {
 	player:      Player,
 	world_camera:      raylib.Camera3D,
 	view_model_camera: raylib.Camera3D,
+	view_model: View_Model,
 	camera_mode: Camera_Mode,
 	assets: Assets
 }

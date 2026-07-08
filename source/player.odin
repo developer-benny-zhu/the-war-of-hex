@@ -60,3 +60,7 @@ player_forward_direction :: proc(player: Player) -> linalg.Vector3f32 {
 player_head_position :: proc(player: Player) -> linalg.Vector3f32 {
     return player.position + linalg.Vector3f32 {0, 4, 0}
 }
+
+player_is_moving :: proc(player: Player) -> bool {
+	return linalg.length(player.velocity) > 0
+}
