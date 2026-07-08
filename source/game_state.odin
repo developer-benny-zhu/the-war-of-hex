@@ -13,7 +13,8 @@ Game_State :: struct {
 	view_model_camera: raylib.Camera3D,
 	view_model: View_Model,
 	camera_mode: Camera_Mode,
-	assets: Assets
+	assets: Assets,
+	crosshair: Crosshair
 }
 
 camera_update :: proc(game_state: ^Game_State) {
@@ -39,6 +40,7 @@ game_state_init :: proc(game_state: ^Game_State) {
 	view_model_camera_init(&game_state.view_model_camera)
 	assets_init(&game_state.assets)
 	player_init(&game_state.player)
+	crosshair_init(&game_state.crosshair)
 }
 
 game_state_update :: proc(game_state: ^Game_State, delta_time: f32) {

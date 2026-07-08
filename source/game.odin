@@ -35,6 +35,8 @@ update :: proc() {
 	draw_view_model(game_state.view_model, game_state.assets)
 	raylib.EndMode3D()
 
+	crosshair_draw(game_state.crosshair)
+
 	raylib.EndDrawing()
 	free_all(context.temp_allocator)
 }
