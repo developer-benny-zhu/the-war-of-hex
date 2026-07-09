@@ -1,5 +1,6 @@
 package game
 
+import "core:math"
 import "vendor:raylib"
 
 Camera_Mode :: enum u8 {
@@ -15,14 +16,17 @@ Scene :: enum u8 {
 
 Game_State :: struct {
 	scene:             Scene,
+	main_menu:         Main_Menu,
 	splash_screen:     Splash_Screen,
 	player:            Player,
 	world_camera:      raylib.Camera3D,
 	view_model_camera: raylib.Camera3D,
+	ui_camera:         raylib.Camera2D,
 	view_model:        View_Model,
 	camera_mode:       Camera_Mode,
 	assets:            Assets,
 	crosshair:         Crosshair,
+	ui_scale:          f32,
 }
 
 world_camera_update :: proc(game_state: ^Game_State) {
@@ -52,6 +56,18 @@ game_state_init :: proc(game_state: ^Game_State) {
 }
 
 game_state_update :: proc(game_state: ^Game_State, delta_time: f32) {
+	scale_x := f32(raylib.GetScreenWidth()) / f32(WINDOW_WIDTH)
+	scale_y := f32(raylib.GetScreenHeight()) / f32(WINDOW_HEIGHT)
+
+	zoom := math.min(scale_x, scale_y)
+
+	game_state.ui_camera.zoom = zoom
+	game_state.ui_camera.rotation = 0
+	game_state.ui_camera.target = {0, 0}
+	game_state.ui_camera.offset = {
+		(f32(raylib.GetScreenWidth()) - f32(WINDOW_WIDTH) * zoom) / 2,
+		(f32(raylib.GetScreenHeight()) - f32(WINDOW_HEIGHT) * zoom) / 2,
+	}
 	world_camera_update(game_state)
 	player_update(&game_state.player, delta_time)
 }

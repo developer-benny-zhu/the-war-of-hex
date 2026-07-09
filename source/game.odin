@@ -5,10 +5,9 @@ import "vendor:raylib"
 
 run: bool
 
-WINDOW_WIDTH :: 800
-WINDOW_HEIGHT :: 600
+WINDOW_WIDTH :: 720
+WINDOW_HEIGHT :: 720
 WINDOW_TITLE :: "Hex Arena"
-FPS :: 60
 splash_screen: Splash_Screen
 
 
@@ -17,15 +16,15 @@ init :: proc() {
 	run = true
 	raylib.SetConfigFlags({.WINDOW_RESIZABLE, .VSYNC_HINT})
 	raylib.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-	raylib.SetTargetFPS(FPS)
+	raylib.InitAudioDevice()
 
 	game_state_init(&game_state)
 }
 
 update :: proc() {
 	delta_time := raylib.GetFrameTime()
-	splash_screen_update(&splash_screen, delta_time)
-	splash_screen_draw(splash_screen, game_state.assets)
+	game_state_update(&game_state, delta_time)
+	main_menu_update(&game_state.main_menu, game_state)
 	free_all(context.temp_allocator)
 }
 

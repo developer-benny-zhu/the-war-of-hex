@@ -32,7 +32,8 @@ Splash_Screen :: struct {
 }
 
 
-splash_screen_draw :: proc(splash_screen: Splash_Screen, assets: Assets) {
+splash_screen_update :: proc(splash_screen: ^Splash_Screen, assets: Assets, delta_time: f32) {
+	splash_screen.timer += delta_time
 	raylib.BeginDrawing()
 	switch splash_screen.timer {
 	case BLACK_SCREEN_START ..< BLACK_SCREEN_END:
@@ -83,17 +84,19 @@ splash_screen_draw :: proc(splash_screen: Splash_Screen, assets: Assets) {
 			f32(raylib.GetScreenWidth()) / 2,
 			f32(raylib.GetScreenHeight()) / 2,
 		}
-		draw_texture(assets.ginger_bill, source, position, .Center, tint = color, scale = {0.25, 0.25})
+		draw_texture(
+			assets.ginger_bill,
+			source,
+			position,
+			.Center,
+			tint = color,
+			scale = {0.25, 0.25},
+		)
 
 
 	}
 	raylib.EndDrawing()
 }
-
-splash_screen_update :: proc(splash_screen: ^Splash_Screen, delta_time: f32) {
-	splash_screen.timer += delta_time
-}
-
 
 fade_in :: proc(color: ^raylib.Color, elapsed: f32, duration: f32) {
 	t: f32 = math.clamp(elapsed / duration, 0.0, 1.0)
@@ -113,9 +116,18 @@ update_fade :: proc(
 	end_time: f32,
 	duration: f32,
 ) {
+	update_fade_in(color, time, start_time, duration)
+	update_fade_out(color, time, end_time, duration)
+}
+
+update_fade_in :: proc(color: ^raylib.Color, time: f32, start_time: f32, duration: f32) {
 	if time < start_time + duration {
 		fade_in(color, time - start_time, duration)
-	} else if time > end_time - duration {
+	}
+}
+
+update_fade_out :: proc(color: ^raylib.Color, time: f32, end_time: f32, duration: f32) {
+	if time > end_time - duration {
 		fade_out(color, time - (end_time - duration), duration)
 	}
 }

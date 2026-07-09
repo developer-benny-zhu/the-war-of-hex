@@ -15,7 +15,6 @@ Player :: struct {
 
 
 player_init :: proc(player: ^Player) {
-	raylib.DisableCursor()
 }
 
 player_update :: proc(player: ^Player, delta_time: f32) {
