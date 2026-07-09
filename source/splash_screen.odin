@@ -32,9 +32,10 @@ Splash_Screen :: struct {
 }
 
 
-splash_screen_update :: proc(splash_screen: ^Splash_Screen, assets: Assets, delta_time: f32) {
-	splash_screen.timer += delta_time
+splash_screen_update :: proc(splash_screen: ^Splash_Screen, game_state: ^Game_State) {
+	splash_screen.timer += raylib.GetFrameTime()
 	raylib.BeginDrawing()
+	raylib.BeginMode2D(game_state.ui_camera)
 	switch splash_screen.timer {
 	case BLACK_SCREEN_START ..< BLACK_SCREEN_END:
 		raylib.ClearBackground(raylib.BLACK)
@@ -50,13 +51,13 @@ splash_screen_update :: proc(splash_screen: ^Splash_Screen, assets: Assets, delt
 		)
 		draw_text(
 			LOGO_SCREEN_TEXT,
-			{f32(raylib.GetScreenWidth()) / 2, f32(raylib.GetScreenHeight()) / 2},
+			{WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2},
 			raylib.GetFontDefault(),
 			LOGO_SCREEN_FONT_SIZE,
 			.Center,
 			tint = color,
 		)
-	case MADE_WITH_SCREEN_START ..= MADE_WITH_SCREEN_END:
+	case MADE_WITH_SCREEN_START ..< MADE_WITH_SCREEN_END:
 		raylib.ClearBackground(raylib.BLACK)
 		color := MADE_WITH_SCREEN_FONT_COLOR
 		update_fade(
@@ -68,7 +69,7 @@ splash_screen_update :: proc(splash_screen: ^Splash_Screen, assets: Assets, delt
 		)
 		draw_text(
 			MADE_WITH_SCREEN_TEXT,
-			{f32(raylib.GetScreenWidth() / 2), f32(raylib.GetScreenHeight() / 2 - 200)},
+			{WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 200},
 			raylib.GetFontDefault(),
 			MADE_WITH_SCREEN_FONT_SIZE,
 			.Center,
@@ -77,24 +78,28 @@ splash_screen_update :: proc(splash_screen: ^Splash_Screen, assets: Assets, delt
 		source := raylib.Rectangle {
 			0,
 			0,
-			f32(assets.ginger_bill.width),
-			f32(assets.ginger_bill.height),
+			f32(game_state.assets.ginger_bill.width),
+			f32(game_state.assets.ginger_bill.height),
 		}
 		position := linalg.Vector2f32 {
-			f32(raylib.GetScreenWidth()) / 2,
-			f32(raylib.GetScreenHeight()) / 2,
+			WINDOW_WIDTH / 2,
+			WINDOW_HEIGHT / 2,
 		}
 		draw_texture(
-			assets.ginger_bill,
+			game_state.assets.ginger_bill,
 			source,
 			position,
 			.Center,
 			tint = color,
 			scale = {0.25, 0.25},
 		)
+		case:
+			game_state.scene = .Main_Menu
+
 
 
 	}
+	raylib.EndMode2D()
 	raylib.EndDrawing()
 }
 

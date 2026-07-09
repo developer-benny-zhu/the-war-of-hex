@@ -29,7 +29,7 @@ View_Model_Kind :: enum u8 {
 	Blaster_A,
 }
 
-draw_view_model :: proc(view_model: View_Model, assets: Assets) {
+view_model_draw :: proc(view_model: View_Model, assets: Assets) {
 	switch view_model.kind {
 	case .Blaster_A:
 		raylib.DrawModel(assets.blaster_a, view_model.position, 1, raylib.WHITE)

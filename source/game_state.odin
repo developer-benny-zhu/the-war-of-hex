@@ -10,7 +10,7 @@ Camera_Mode :: enum u8 {
 Scene :: enum u8 {
 	Splash_Screen,
 	Main_Menu,
-	Game,
+	Main_Game,
 }
 
 
@@ -56,6 +56,20 @@ game_state_init :: proc(game_state: ^Game_State) {
 }
 
 game_state_update :: proc(game_state: ^Game_State, delta_time: f32) {
+	switch game_state.scene {
+	case .Splash_Screen:
+		splash_screen_update(&game_state.splash_screen, game_state)
+		ui_camera_update(&game_state.ui_camera)
+	case .Main_Menu:
+		main_menu_update(&game_state.main_menu, game_state)
+		ui_camera_update(&game_state.ui_camera)
+	case .Main_Game:
+		world_camera_update(game_state)
+		main_game_update(game_state)
+	}
+}
+
+ui_camera_update :: proc(ui_camera: ^raylib.Camera2D) {
 	scale_x := f32(raylib.GetScreenWidth()) / f32(WINDOW_WIDTH)
 	scale_y := f32(raylib.GetScreenHeight()) / f32(WINDOW_HEIGHT)
 
@@ -68,10 +82,7 @@ game_state_update :: proc(game_state: ^Game_State, delta_time: f32) {
 		(f32(raylib.GetScreenWidth()) - f32(WINDOW_WIDTH) * zoom) / 2,
 		(f32(raylib.GetScreenHeight()) - f32(WINDOW_HEIGHT) * zoom) / 2,
 	}
-	world_camera_update(game_state)
-	player_update(&game_state.player, delta_time)
 }
-
 game_state_destroy :: proc(game_state: ^Game_State) {
 	assets_destroy(&game_state.assets)
 }

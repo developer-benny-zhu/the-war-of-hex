@@ -24,7 +24,6 @@ init :: proc() {
 update :: proc() {
 	delta_time := raylib.GetFrameTime()
 	game_state_update(&game_state, delta_time)
-	main_menu_update(&game_state.main_menu, game_state)
 	free_all(context.temp_allocator)
 }
 

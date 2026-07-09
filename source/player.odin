@@ -17,7 +17,7 @@ Player :: struct {
 player_init :: proc(player: ^Player) {
 }
 
-player_update :: proc(player: ^Player, delta_time: f32) {
+player_update :: proc(player: ^Player) {
 	mouse_delta := raylib.GetMouseDelta()
 	player.yaw -= mouse_delta.x * SENSITIVITY
 	player.pitch -= mouse_delta.y * SENSITIVITY
@@ -42,7 +42,7 @@ player_update :: proc(player: ^Player, delta_time: f32) {
 		move_direction = linalg.normalize(move_direction)
 	}
 	player.velocity = move_direction * SPEED
-	player.position += player.velocity * delta_time
+	player.position += player.velocity * raylib.GetFrameTime()
 }
 
 player_forward_direction :: proc(player: Player) -> linalg.Vector3f32 {

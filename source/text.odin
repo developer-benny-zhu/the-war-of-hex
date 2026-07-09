@@ -3,13 +3,6 @@ package game
 import "core:c"
 import "core:math/linalg"
 import "vendor:raylib"
-Origin :: enum u8 {
-	Top_Left,
-	Center,
-	Top_Right,
-	Bottom_Left,
-	Bottom_Right,
-}
 
 draw_text :: proc(
 	text: cstring,
