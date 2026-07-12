@@ -13,6 +13,16 @@ Grid :: struct {
 	tiles: [GRID_SIZE_Y][GRID_SIZE_X]Tile,
 }
 
+grid_tile_position :: proc(row_index, column_index: int) -> linalg.Vector2f32 {
+	hexagon_height := get_hexagon_height(TILE_RADIUS * 2)
+	y_position := f32(row_index) * (TILE_RADIUS * 1.5)
+	x_position := f32(column_index) * hexagon_height
+	if !is_even(i32(row_index)) {
+		x_position += hexagon_height / 2
+	}
+	return {x_position, y_position}
+}
+
 grid_init :: proc(grid: ^Grid) {
 	seed_x := rand.float32_range(-10000, 10000)
 	seed_y := rand.float32_range(-10000, 10000)
@@ -40,6 +50,7 @@ grid_init :: proc(grid: ^Grid) {
 			tile := &grid.tiles[row][col]
 			if tile.kind >= .Grass_05 && tile.kind <= .Grass_16 {
 				tile.kind = .Medieval_SmallCastle
+				tile.team = .Player
 				player_placed = true
 				break
 			}
@@ -53,6 +64,7 @@ grid_init :: proc(grid: ^Grid) {
 			tile := &grid.tiles[row][col]
 			if tile.kind >= .Grass_05 && tile.kind <= .Grass_16 {
 				tile.kind = .Medieval_LargeCastle
+				tile.team = .Enemy
 				enemy_placed = true
 				break
 			}
@@ -84,15 +96,9 @@ basic_noise_2d :: proc(x, y: f32) -> f32 {
 }
 
 grid_draw :: proc(grid: Grid, game_state: ^Game_State) {
-	hexagon_height := get_hexagon_height(TILE_RADIUS * 2)
 	for row, row_index in grid.tiles {
-		y_position := f32(row_index) * (TILE_RADIUS * 1.5)
 		for tile, column_index in row {
-			x_position := f32(column_index) * hexagon_height
-			if !is_even(i32(row_index)) {
-				x_position += hexagon_height / 2
-			}
-			tile_position := linalg.Vector2f32{x_position, y_position}
+			tile_position := grid_tile_position(row_index, column_index)
 			tile_draw(tile, tile_position, TILE_RADIUS, game_state)
 		}
 	}
