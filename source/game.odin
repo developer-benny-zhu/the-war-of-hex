@@ -4,12 +4,10 @@ import "core:c"
 import "vendor:raylib"
 
 run: bool
-player: Player
 
 VIRTUAL_SCREEN_WIDTH :: 720
 VIRTUAL_SCREEN_HEIGHT :: 720
 WINDOW_TITLE :: "Hex Arena"
-
 
 game_state: Game_State
 
@@ -31,7 +29,6 @@ parent_window_size_changed :: proc(width: int, height: int) {
 }
 
 shutdown :: proc() {
-	game_state_destroy(&game_state)
 	raylib.CloseWindow()
 }
 
@@ -44,4 +41,3 @@ should_run :: proc() -> bool {
 
 	return run
 }
-

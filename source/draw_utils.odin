@@ -1,14 +1,14 @@
 package game
 
-import "vendor:raylib"
 import "core:math/linalg"
+import "vendor:raylib"
 
 Origin :: enum {
 	Center,
 	Top_Left,
 	Top_Right,
 	Bottom_Left,
-	Bottom_Right
+	Bottom_Right,
 }
 
 draw_texture_from_tile_sheet :: proc(
@@ -18,28 +18,38 @@ draw_texture_from_tile_sheet :: proc(
 	position: linalg.Vector2f32,
 	$origin: Origin,
 	rotation: f32 = 0,
-	scale := linalg.Vector2f32 {1, 1},
-	tint := raylib.WHITE
+	scale := linalg.Vector2f32{1, 1},
+	tint := raylib.WHITE,
 ) {
 
 	source := raylib.Rectangle {
 		tile_coordinate.x * tile_size.x,
 		tile_coordinate.y * tile_size.y,
 		tile_size.x,
-		tile_size.y
+		tile_size.y,
 	}
+	draw_texture(texture, source, position, origin, rotation, scale, tint)
+}
+
+
+draw_texture :: proc(
+	texture: raylib.Texture2D,
+	source: raylib.Rectangle,
+	position: linalg.Vector2f32,
+	$origin: Origin,
+	rotation: f32 = 0,
+	scale := linalg.Vector2f32{1, 1},
+	tint := raylib.WHITE,
+) {
 	destination := raylib.Rectangle {
 		position.x,
 		position.y,
 		source.width * scale.x,
-		source.height * scale.y
+		source.height * scale.y,
 	}
 	origin_value: linalg.Vector2f32
 	when origin == Origin.Center {
-		origin_value = {
-			destination.width / 2,
-			destination.height / 2
-		}
+		origin_value = {destination.width / 2, destination.height / 2}
 	}
 	when origin == Origin.Top_Left {
 		origin_value = {0, 0}
@@ -54,6 +64,4 @@ draw_texture_from_tile_sheet :: proc(
 		origin_value = {destination.width, destination.height}
 	}
 	raylib.DrawTexturePro(texture, source, destination, origin_value, rotation, tint)
-	
-	
 }

@@ -3,6 +3,13 @@ package game
 import "core:math/linalg"
 import "core:math"
 
+
+
+
+get_hexagon_height :: proc(diameter: f32) -> f32 {
+	return diameter * (math.sqrt_f32(3) / 2)
+}
+
 get_distance :: proc(position_1: linalg.Vector2f32, position_2: linalg.Vector2f32) -> f32 {
 	position_difference := position_2 - position_1
 	x_squared := math.pow(position_difference.x, 2)
@@ -33,4 +40,8 @@ radians_to_degrees :: proc(value: f32) -> f32 {
 
 degrees_to_radians :: proc(value: f32) -> f32 {
 	return value * (math.PI / 180)
+}
+
+is_even :: proc(value: i32) -> bool {
+	return i32(value) % 2 == 0
 }
