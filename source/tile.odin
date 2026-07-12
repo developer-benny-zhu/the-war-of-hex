@@ -5,118 +5,261 @@ import "core:math/rand"
 import "vendor:raylib"
 
 Tile_Kind :: enum {
-    Dirt_06, Dirt_11, Dirt_12, Dirt_13, Dirt_14, Dirt_15, Dirt_16, Dirt_17, Dirt_18,
-    Grass_05, Grass_10, Grass_11, Grass_12, Grass_13, Grass_14, Grass_15, Grass_16,
-    Mars_07, Mars_12, Mars_13, Mars_14, Mars_15, Mars_16, Mars_17, Mars_18,
-    Medieval_Archery, Medieval_Archway, Medieval_Blacksmith, Medieval_Cabin, Medieval_Church,
-    Medieval_Farm, Medieval_House, Medieval_LargeCastle, Medieval_Lumber, Medieval_Mine,
-    Medieval_OpenCastle, Medieval_Ruins, Medieval_SmallCastle, Medieval_Tower, Medieval_Windmill,
-    Military_Entrance, Military_Hangar, Military_Rockets, Military_Tanks,
-    Military_TurretLarge, Military_TurretMedium, Military_TurretSmall,
-    Mill_Crane, Mill_Cutter, Mill_Factory, Mill_StoneWarehouse, Mill_Storage, Mill_Warehouse,
-    Modern_Campsite, Modern_CornerShop, Modern_House, Modern_HouseSmall, Modern_LargeBuilding,
-    Modern_OldBuilding, Modern_Petrol, Modern_Shop, Modern_Skyscraper, Modern_SkyscraperGlass,
-    Modern_Trailerpark, Modern_Villa, Modern_VillageLarge,
-    Sand_07, Sand_12, Sand_13, Sand_14, Sand_15, Sand_16, Sand_17, Sand_18,
-    Scifi_Base, Scifi_Building, Scifi_Cargo, Scifi_Corner, Scifi_Domes, Scifi_Energy,
-    Scifi_Factory, Scifi_FactoryHangar, Scifi_FactoryHigh, Scifi_Foliage, Scifi_Hangar,
-    Scifi_Headquarters, Scifi_Living, Scifi_Port, Scifi_Silo, Scifi_Skyscraper, Scifi_Tower,
-    Stone_07,
-    Western_Bank, Western_General, Western_Indians, Western_Saloon, Western_Sheriff,
-    Western_Station, Western_Watertower,
+	Dirt_06,
+	Dirt_11,
+	Dirt_12,
+	Dirt_13,
+	Dirt_14,
+	Dirt_15,
+	Dirt_16,
+	Dirt_17,
+	Dirt_18,
+	Grass_05,
+	Grass_10,
+	Grass_11,
+	Grass_12,
+	Grass_13,
+	Grass_14,
+	Grass_15,
+	Grass_16,
+	Mars_07,
+	Mars_12,
+	Mars_13,
+	Mars_14,
+	Mars_15,
+	Mars_16,
+	Mars_17,
+	Mars_18,
+	Medieval_Archery,
+	Medieval_Archway,
+	Medieval_Blacksmith,
+	Medieval_Cabin,
+	Medieval_Church,
+	Medieval_Farm,
+	Medieval_House,
+	Medieval_LargeCastle,
+	Medieval_Lumber,
+	Medieval_Mine,
+	Medieval_OpenCastle,
+	Medieval_Ruins,
+	Medieval_SmallCastle,
+	Medieval_Tower,
+	Medieval_Windmill,
+	Military_Entrance,
+	Military_Hangar,
+	Military_Rockets,
+	Military_Tanks,
+	Military_TurretLarge,
+	Military_TurretMedium,
+	Military_TurretSmall,
+	Mill_Crane,
+	Mill_Cutter,
+	Mill_Factory,
+	Mill_StoneWarehouse,
+	Mill_Storage,
+	Mill_Warehouse,
+	Modern_Campsite,
+	Modern_CornerShop,
+	Modern_House,
+	Modern_HouseSmall,
+	Modern_LargeBuilding,
+	Modern_OldBuilding,
+	Modern_Petrol,
+	Modern_Shop,
+	Modern_Skyscraper,
+	Modern_SkyscraperGlass,
+	Modern_Trailerpark,
+	Modern_Villa,
+	Modern_VillageLarge,
+	Sand_07,
+	Sand_12,
+	Sand_13,
+	Sand_14,
+	Sand_15,
+	Sand_16,
+	Sand_17,
+	Sand_18,
+	Scifi_Base,
+	Scifi_Building,
+	Scifi_Cargo,
+	Scifi_Corner,
+	Scifi_Domes,
+	Scifi_Energy,
+	Scifi_Factory,
+	Scifi_FactoryHangar,
+	Scifi_FactoryHigh,
+	Scifi_Foliage,
+	Scifi_Hangar,
+	Scifi_Headquarters,
+	Scifi_Living,
+	Scifi_Port,
+	Scifi_Silo,
+	Scifi_Skyscraper,
+	Scifi_Tower,
+	Stone_07,
+	Western_Bank,
+	Western_General,
+	Western_Indians,
+	Western_Saloon,
+	Western_Sheriff,
+	Western_Station,
+	Western_Watertower,
 }
 
-tile_kind_to_source := [Tile_Kind]raylib.Rectangle{
-    .Dirt_06 = DIRT_06_SOURCE, .Dirt_11 = DIRT_11_SOURCE, .Dirt_12 = DIRT_12_SOURCE, 
-    .Dirt_13 = DIRT_13_SOURCE, .Dirt_14 = DIRT_14_SOURCE, .Dirt_15 = DIRT_15_SOURCE, 
-    .Dirt_16 = DIRT_16_SOURCE, .Dirt_17 = DIRT_17_SOURCE, .Dirt_18 = DIRT_18_SOURCE,
-
-    .Grass_05 = GRASS_05_SOURCE, .Grass_10 = GRASS_10_SOURCE, .Grass_11 = GRASS_11_SOURCE, 
-    .Grass_12 = GRASS_12_SOURCE, .Grass_13 = GRASS_13_SOURCE, .Grass_14 = GRASS_14_SOURCE, 
-    .Grass_15 = GRASS_15_SOURCE, .Grass_16 = GRASS_16_SOURCE,
-
-    .Mars_07 = MARS_07_SOURCE, .Mars_12 = MARS_12_SOURCE, .Mars_13 = MARS_13_SOURCE, 
-    .Mars_14 = MARS_14_SOURCE, .Mars_15 = MARS_15_SOURCE, .Mars_16 = MARS_16_SOURCE, 
-    .Mars_17 = MARS_17_SOURCE, .Mars_18 = MARS_18_SOURCE,
-
-    .Medieval_Archery = MEDIEVAL_ARCHERY_SOURCE, .Medieval_Archway = MEDIEVAL_ARCHWAY_SOURCE, 
-    .Medieval_Blacksmith = MEDIEVAL_BLACKSMITH_SOURCE, .Medieval_Cabin = MEDIEVAL_CABIN_SOURCE, 
-    .Medieval_Church = MEDIEVAL_CHURCH_SOURCE, .Medieval_Farm = MEDIEVAL_FARM_SOURCE, 
-    .Medieval_House = MEDIEVAL_HOUSE_SOURCE, .Medieval_LargeCastle = MEDIEVAL_LARGECASTLE_SOURCE, 
-    .Medieval_Lumber = MEDIEVAL_LUMBER_SOURCE, .Medieval_Mine = MEDIEVAL_MINE_SOURCE, 
-    .Medieval_OpenCastle = MEDIEVAL_OPENCASTLE_SOURCE, .Medieval_Ruins = MEDIEVAL_RUINS_SOURCE, 
-    .Medieval_SmallCastle = MEDIEVAL_SMALLCASTLE_SOURCE, .Medieval_Tower = MEDIEVAL_TOWER_SOURCE, 
-    .Medieval_Windmill = MEDIEVAL_WINDMILL_SOURCE,
-
-    .Military_Entrance = MILITARY_ENTRANCE_SOURCE, .Military_Hangar = MILITARY_HANGAR_SOURCE, 
-    .Military_Rockets = MILITARY_ROCKETS_SOURCE, .Military_Tanks = MILITARY_TANKS_SOURCE, 
-    .Military_TurretLarge = MILITARY_TURRETLARGE_SOURCE, .Military_TurretMedium = MILITARY_TURRETMEDIUM_SOURCE, 
-    .Military_TurretSmall = MILITARY_TURRETSMALL_SOURCE,
-
-    .Mill_Crane = MILL_CRANE_SOURCE, .Mill_Cutter = MILL_CUTTER_SOURCE, .Mill_Factory = MILL_FACTORY_SOURCE, 
-    .Mill_StoneWarehouse = MILL_STONEWAREHOUSE_SOURCE, .Mill_Storage = MILL_STORAGE_SOURCE, 
-    .Mill_Warehouse = MILL_WAREHOUSE_SOURCE,
-
-    .Modern_Campsite = MODERN_CAMPSITE_SOURCE, .Modern_CornerShop = MODERN_CORNERSHOP_SOURCE, 
-    .Modern_House = MODERN_HOUSE_SOURCE, .Modern_HouseSmall = MODERN_HOUSESMALL_SOURCE, 
-    .Modern_LargeBuilding = MODERN_LARGEBUILDING_SOURCE, .Modern_OldBuilding = MODERN_OLDBUILDING_SOURCE, 
-    .Modern_Petrol = MODERN_PETROL_SOURCE, .Modern_Shop = MODERN_SHOP_SOURCE, 
-    .Modern_Skyscraper = MODERN_SKYSCRAPER_SOURCE, .Modern_SkyscraperGlass = MODERN_SKYSCRAPERGLASS_SOURCE, 
-    .Modern_Trailerpark = MODERN_TRAILERPARK_SOURCE, .Modern_Villa = MODERN_VILLA_SOURCE, 
-    .Modern_VillageLarge = MODERN_VILLAGELARGE_SOURCE,
-
-    .Sand_07 = SAND_07_SOURCE, .Sand_12 = SAND_12_SOURCE, .Sand_13 = SAND_13_SOURCE, 
-    .Sand_14 = SAND_14_SOURCE, .Sand_15 = SAND_15_SOURCE, .Sand_16 = SAND_16_SOURCE, 
-    .Sand_17 = SAND_17_SOURCE, .Sand_18 = SAND_18_SOURCE,
-
-    .Scifi_Base = SCIFI_BASE_SOURCE, .Scifi_Building = SCIFI_BUILDING_SOURCE, 
-    .Scifi_Cargo = SCIFI_CARGO_SOURCE, .Scifi_Corner = SCIFI_CORNER_SOURCE, 
-    .Scifi_Domes = SCIFI_DOMES_SOURCE, .Scifi_Energy = SCIFI_ENERGY_SOURCE, 
-    .Scifi_Factory = SCIFI_FACTORY_SOURCE, .Scifi_FactoryHangar = SCIFI_FACTORYHANGAR_SOURCE, 
-    .Scifi_FactoryHigh = SCIFI_FACTORYHIGH_SOURCE, .Scifi_Foliage = SCIFI_FOLIAGE_SOURCE, 
-    .Scifi_Hangar = SCIFI_HANGAR_SOURCE, .Scifi_Headquarters = SCIFI_HEADQUARTERS_SOURCE, 
-    .Scifi_Living = SCIFI_LIVING_SOURCE, .Scifi_Port = SCIFI_PORT_SOURCE, 
-    .Scifi_Silo = SCIFI_SILO_SOURCE, .Scifi_Skyscraper = SCIFI_SKYSCRAPER_SOURCE, .Scifi_Tower = SCIFI_TOWER_SOURCE,
-
-    .Stone_07 = STONE_07_SOURCE,
-
-    .Western_Bank = WESTERN_BANK_SOURCE, .Western_General = WESTERN_GENERAL_SOURCE, 
-    .Western_Indians = WESTERN_INDIANS_SOURCE, .Western_Saloon = WESTERN_SALOON_SOURCE, 
-    .Western_Sheriff = WESTERN_SHERIFF_SOURCE, .Western_Station = WESTERN_STATION_SOURCE, 
-    .Western_Watertower = WESTERN_WATERTOWER_SOURCE,
+tile_kind_to_source := [Tile_Kind]raylib.Rectangle {
+	.Dirt_06                = DIRT_06_SOURCE,
+	.Dirt_11                = DIRT_11_SOURCE,
+	.Dirt_12                = DIRT_12_SOURCE,
+	.Dirt_13                = DIRT_13_SOURCE,
+	.Dirt_14                = DIRT_14_SOURCE,
+	.Dirt_15                = DIRT_15_SOURCE,
+	.Dirt_16                = DIRT_16_SOURCE,
+	.Dirt_17                = DIRT_17_SOURCE,
+	.Dirt_18                = DIRT_18_SOURCE,
+	.Grass_05               = GRASS_05_SOURCE,
+	.Grass_10               = GRASS_10_SOURCE,
+	.Grass_11               = GRASS_11_SOURCE,
+	.Grass_12               = GRASS_12_SOURCE,
+	.Grass_13               = GRASS_13_SOURCE,
+	.Grass_14               = GRASS_14_SOURCE,
+	.Grass_15               = GRASS_15_SOURCE,
+	.Grass_16               = GRASS_16_SOURCE,
+	.Mars_07                = MARS_07_SOURCE,
+	.Mars_12                = MARS_12_SOURCE,
+	.Mars_13                = MARS_13_SOURCE,
+	.Mars_14                = MARS_14_SOURCE,
+	.Mars_15                = MARS_15_SOURCE,
+	.Mars_16                = MARS_16_SOURCE,
+	.Mars_17                = MARS_17_SOURCE,
+	.Mars_18                = MARS_18_SOURCE,
+	.Medieval_Archery       = MEDIEVAL_ARCHERY_SOURCE,
+	.Medieval_Archway       = MEDIEVAL_ARCHWAY_SOURCE,
+	.Medieval_Blacksmith    = MEDIEVAL_BLACKSMITH_SOURCE,
+	.Medieval_Cabin         = MEDIEVAL_CABIN_SOURCE,
+	.Medieval_Church        = MEDIEVAL_CHURCH_SOURCE,
+	.Medieval_Farm          = MEDIEVAL_FARM_SOURCE,
+	.Medieval_House         = MEDIEVAL_HOUSE_SOURCE,
+	.Medieval_LargeCastle   = MEDIEVAL_LARGECASTLE_SOURCE,
+	.Medieval_Lumber        = MEDIEVAL_LUMBER_SOURCE,
+	.Medieval_Mine          = MEDIEVAL_MINE_SOURCE,
+	.Medieval_OpenCastle    = MEDIEVAL_OPENCASTLE_SOURCE,
+	.Medieval_Ruins         = MEDIEVAL_RUINS_SOURCE,
+	.Medieval_SmallCastle   = MEDIEVAL_SMALLCASTLE_SOURCE,
+	.Medieval_Tower         = MEDIEVAL_TOWER_SOURCE,
+	.Medieval_Windmill      = MEDIEVAL_WINDMILL_SOURCE,
+	.Military_Entrance      = MILITARY_ENTRANCE_SOURCE,
+	.Military_Hangar        = MILITARY_HANGAR_SOURCE,
+	.Military_Rockets       = MILITARY_ROCKETS_SOURCE,
+	.Military_Tanks         = MILITARY_TANKS_SOURCE,
+	.Military_TurretLarge   = MILITARY_TURRETLARGE_SOURCE,
+	.Military_TurretMedium  = MILITARY_TURRETMEDIUM_SOURCE,
+	.Military_TurretSmall   = MILITARY_TURRETSMALL_SOURCE,
+	.Mill_Crane             = MILL_CRANE_SOURCE,
+	.Mill_Cutter            = MILL_CUTTER_SOURCE,
+	.Mill_Factory           = MILL_FACTORY_SOURCE,
+	.Mill_StoneWarehouse    = MILL_STONEWAREHOUSE_SOURCE,
+	.Mill_Storage           = MILL_STORAGE_SOURCE,
+	.Mill_Warehouse         = MILL_WAREHOUSE_SOURCE,
+	.Modern_Campsite        = MODERN_CAMPSITE_SOURCE,
+	.Modern_CornerShop      = MODERN_CORNERSHOP_SOURCE,
+	.Modern_House           = MODERN_HOUSE_SOURCE,
+	.Modern_HouseSmall      = MODERN_HOUSESMALL_SOURCE,
+	.Modern_LargeBuilding   = MODERN_LARGEBUILDING_SOURCE,
+	.Modern_OldBuilding     = MODERN_OLDBUILDING_SOURCE,
+	.Modern_Petrol          = MODERN_PETROL_SOURCE,
+	.Modern_Shop            = MODERN_SHOP_SOURCE,
+	.Modern_Skyscraper      = MODERN_SKYSCRAPER_SOURCE,
+	.Modern_SkyscraperGlass = MODERN_SKYSCRAPERGLASS_SOURCE,
+	.Modern_Trailerpark     = MODERN_TRAILERPARK_SOURCE,
+	.Modern_Villa           = MODERN_VILLA_SOURCE,
+	.Modern_VillageLarge    = MODERN_VILLAGELARGE_SOURCE,
+	.Sand_07                = SAND_07_SOURCE,
+	.Sand_12                = SAND_12_SOURCE,
+	.Sand_13                = SAND_13_SOURCE,
+	.Sand_14                = SAND_14_SOURCE,
+	.Sand_15                = SAND_15_SOURCE,
+	.Sand_16                = SAND_16_SOURCE,
+	.Sand_17                = SAND_17_SOURCE,
+	.Sand_18                = SAND_18_SOURCE,
+	.Scifi_Base             = SCIFI_BASE_SOURCE,
+	.Scifi_Building         = SCIFI_BUILDING_SOURCE,
+	.Scifi_Cargo            = SCIFI_CARGO_SOURCE,
+	.Scifi_Corner           = SCIFI_CORNER_SOURCE,
+	.Scifi_Domes            = SCIFI_DOMES_SOURCE,
+	.Scifi_Energy           = SCIFI_ENERGY_SOURCE,
+	.Scifi_Factory          = SCIFI_FACTORY_SOURCE,
+	.Scifi_FactoryHangar    = SCIFI_FACTORYHANGAR_SOURCE,
+	.Scifi_FactoryHigh      = SCIFI_FACTORYHIGH_SOURCE,
+	.Scifi_Foliage          = SCIFI_FOLIAGE_SOURCE,
+	.Scifi_Hangar           = SCIFI_HANGAR_SOURCE,
+	.Scifi_Headquarters     = SCIFI_HEADQUARTERS_SOURCE,
+	.Scifi_Living           = SCIFI_LIVING_SOURCE,
+	.Scifi_Port             = SCIFI_PORT_SOURCE,
+	.Scifi_Silo             = SCIFI_SILO_SOURCE,
+	.Scifi_Skyscraper       = SCIFI_SKYSCRAPER_SOURCE,
+	.Scifi_Tower            = SCIFI_TOWER_SOURCE,
+	.Stone_07               = STONE_07_SOURCE,
+	.Western_Bank           = WESTERN_BANK_SOURCE,
+	.Western_General        = WESTERN_GENERAL_SOURCE,
+	.Western_Indians        = WESTERN_INDIANS_SOURCE,
+	.Western_Saloon         = WESTERN_SALOON_SOURCE,
+	.Western_Sheriff        = WESTERN_SHERIFF_SOURCE,
+	.Western_Station        = WESTERN_STATION_SOURCE,
+	.Western_Watertower     = WESTERN_WATERTOWER_SOURCE,
 }
 
 Tile :: struct {
-    kind: Tile_Kind,
-    team: Team,
+	kind: Tile_Kind,
+	team: Team,
 }
 
 tile_init_procedural :: proc(tile: ^Tile, elevation: f32) {
-    tile.team = .None
-    stone_pool := [1]Tile_Kind{ .Stone_07 }
-    sand_pool  := [8]Tile_Kind{ .Sand_07, .Sand_12, .Sand_13, .Sand_14, .Sand_15, .Sand_16, .Sand_17, .Sand_18 }
-    grass_pool := [8]Tile_Kind{ .Grass_05, .Grass_10, .Grass_11, .Grass_12, .Grass_13, .Grass_14, .Grass_15, .Grass_16 }
-    dirt_pool  := [9]Tile_Kind{ .Dirt_06, .Dirt_11, .Dirt_12, .Dirt_13, .Dirt_14, .Dirt_15, .Dirt_16, .Dirt_17, .Dirt_18 }
+	tile.team = .None
 
-    if elevation < 0.20 {
-        tile.kind = stone_pool[0]
-    } else if elevation < 0.38 {
-        tile.kind = sand_pool[rand.int_max(len(sand_pool))]
-    } else if elevation < 0.72 {
-        tile.kind = grass_pool[rand.int_max(len(grass_pool))]
-    } else {
-        tile.kind = dirt_pool[rand.int_max(len(dirt_pool))]
-    }
+	mars_pool := [8]Tile_Kind {
+		.Mars_07,
+		.Mars_12,
+		.Mars_13,
+		.Mars_14,
+		.Mars_15,
+		.Mars_16,
+		.Mars_17,
+		.Mars_18,
+	}
+
+	scifi_hubs := [3]Tile_Kind{.Scifi_Base, .Scifi_Domes, .Scifi_Living}
+	scifi_towers := [3]Tile_Kind{.Scifi_Energy, .Scifi_Skyscraper, .Scifi_Tower}
+
+	if elevation < 0.35 {
+		tile.kind = mars_pool[rand.int_max(len(mars_pool))]
+	} else if elevation < 0.50 {
+		tile.kind = scifi_hubs[rand.int_max(len(scifi_hubs))]
+	} else if elevation < 0.78 {
+		tile.kind = mars_pool[rand.int_max(len(mars_pool))]
+	} else {
+		tile.kind = scifi_towers[rand.int_max(len(scifi_towers))]
+	}
 }
 
-tile_draw :: proc(tile: Tile, position: linalg.Vector2f32, radius: f32, game_state: ^Game_State, selected: bool = false) {
-    draw_texture(game_state.assets.kenney_hexagon_sheet, tile_kind_to_source[tile.kind], position, .Center)
-    if tile.team == .Player {
-        draw_hexagon(position, radius, 90, {0, 0, 255, 80})
-    } else if tile.team == .Enemy {
-        draw_hexagon(position, radius, 90, {255, 0, 0, 80})
-    }
-    if selected {
-        draw_hexagon_lines(position, radius, 90, raylib.YELLOW)
-    }
+tile_draw :: proc(
+	tile: Tile,
+	position: linalg.Vector2f32,
+	radius: f32,
+	game_state: ^Game_State,
+	selected: bool = false,
+) {
+	draw_texture(
+		game_state.assets.kenney_hexagon_sheet,
+		tile_kind_to_source[tile.kind],
+		position,
+		.Center,
+	)
+	if tile.team == .Player {
+		draw_hexagon(position, radius, 90, {0, 0, 255, 80})
+	} else if tile.team == .Enemy {
+		draw_hexagon(position, radius, 90, {255, 0, 0, 80})
+	}
+	if selected {
+		draw_hexagon_lines(position, radius, 90, raylib.YELLOW)
+	}
 }
