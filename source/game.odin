@@ -7,7 +7,7 @@ run: bool
 
 VIRTUAL_SCREEN_WIDTH :: 720
 VIRTUAL_SCREEN_HEIGHT :: 720
-WINDOW_TITLE :: "Hex Arena"
+WINDOW_TITLE :: "The War of Hex"
 
 game_state: Game_State
 
