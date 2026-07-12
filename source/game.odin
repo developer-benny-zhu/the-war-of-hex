@@ -4,19 +4,25 @@ import "core:c"
 import "vendor:raylib"
 
 run: bool
+player: Player
 
-WINDOW_WIDTH :: 720
-WINDOW_HEIGHT :: 720
+VIRTUAL_SCREEN_WIDTH :: 720
+VIRTUAL_SCREEN_HEIGHT :: 720
 WINDOW_TITLE :: "Hex Arena"
+
+
+game_state: Game_State
 
 init :: proc() {
 	run = true
 	raylib.SetConfigFlags({.WINDOW_RESIZABLE, .VSYNC_HINT})
-	raylib.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+	raylib.InitWindow(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT, WINDOW_TITLE)
 	raylib.InitAudioDevice()
+	game_state_init(&game_state)
 }
 
 update :: proc() {
+	game_state_update(&game_state)
 	free_all(context.temp_allocator)
 }
 
@@ -25,6 +31,7 @@ parent_window_size_changed :: proc(width: int, height: int) {
 }
 
 shutdown :: proc() {
+	game_state_destroy(&game_state)
 	raylib.CloseWindow()
 }
 
