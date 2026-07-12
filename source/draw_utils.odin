@@ -96,7 +96,7 @@ draw_text :: proc(
         )
     }
     when origin == .Bottom_Left {
-        raylib.DrawTextPro(font, text, position, {0, size.y}, rotation, font_size, spacing, tint)
+        raylib.DrawTextPro(font, text, position, {0, text_size.y}, rotation, font_size, spacing, tint)
     }
     when origin == .Bottom_Right {
         raylib.DrawTextPro(font, text, position, text_size, rotation, font_size, spacing, tint)
