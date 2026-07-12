@@ -274,7 +274,7 @@ world_enemy_ai_update :: proc(world: ^World) {
 	if !world.ai_spawn_done {
 		if world.enemy_money >= 10 {
 			chosen_kind: Unit_Kind = .Peasant
-			if world.enemy_money >= 50 do chosen_kind = .Wizard
+			if world.enemy_money >= 50 do chosen_kind = .Tank
 			else if world.enemy_money >= 20 do chosen_kind = .Footman
 
 			cost := unit_cost(chosen_kind)
@@ -324,6 +324,7 @@ world_enemy_ai_update :: proc(world: ^World) {
 	unit := &world.units[active_unit_index]
 	offsets := is_even(i32(unit.row)) ? offsets_even_row : offsets_odd_row
 	unit_has_completed_action := false
+	attacker_power := unit_combat_power(unit.kind)
 
 	for offset in offsets {
 		neighbor_row := unit.row + offset[0]
@@ -335,9 +336,50 @@ world_enemy_ai_update :: proc(world: ^World) {
 		   neighbor_column < GRID_SIZE_X {
 			defender_index := world_unit_at_tile(world, neighbor_row, neighbor_column)
 			if defender_index != -1 && world.units[defender_index].team == .Player {
-				world_move_unit_to_tile(world, active_unit_index, neighbor_row, neighbor_column)
+				defender_power := unit_combat_power(world.units[defender_index].kind)
+				if attacker_power >= defender_power {
+					world_move_unit_to_tile(
+						world,
+						active_unit_index,
+						neighbor_row,
+						neighbor_column,
+					)
+					unit_has_completed_action = true
+					break
+				}
+			}
+		}
+	}
+
+	if !unit_has_completed_action {
+		base_threatened := false
+		base_offsets := is_even(i32(world.enemy_base_row)) ? offsets_even_row : offsets_odd_row
+
+		for base_off in base_offsets {
+			check_r := world.enemy_base_row + base_off[0]
+			check_c := world.enemy_base_column + base_off[1]
+			if check_r >= 0 && check_r < GRID_SIZE_Y && check_c >= 0 && check_c < GRID_SIZE_X {
+				defender_idx := world_unit_at_tile(world, check_r, check_c)
+				if defender_idx != -1 && world.units[defender_idx].team == .Player {
+					base_threatened = true
+					break
+				}
+			}
+		}
+
+		if base_threatened {
+			if unit.row == world.enemy_base_row && unit.column == world.enemy_base_column {
+				world.units[active_unit_index].has_moved = true
 				unit_has_completed_action = true
-				break
+			} else if !world_tile_has_unit(world, world.enemy_base_row, world.enemy_base_column) &&
+			   world.grid.tiles[world.enemy_base_row][world.enemy_base_column].team == .Enemy {
+				world_move_unit_to_tile(
+					world,
+					active_unit_index,
+					world.enemy_base_row,
+					world.enemy_base_column,
+				)
+				unit_has_completed_action = true
 			}
 		}
 	}
@@ -367,7 +409,11 @@ world_enemy_ai_update :: proc(world: ^World) {
 	}
 
 	if !unit_has_completed_action {
-		frontline_search_loop: for row_index in 0 ..< GRID_SIZE_Y {
+		best_row := -1
+		best_col := -1
+		best_dist := 9999
+
+		for row_index in 0 ..< GRID_SIZE_Y {
 			for column_index in 0 ..< GRID_SIZE_X {
 				if world.grid.tiles[row_index][column_index].team == .Enemy &&
 				   !world_tile_has_unit(world, row_index, column_index) {
@@ -391,12 +437,21 @@ world_enemy_ai_update :: proc(world: ^World) {
 					}
 
 					if is_frontline {
-						world_move_unit_to_tile(world, active_unit_index, row_index, column_index)
-						unit_has_completed_action = true
-						break frontline_search_loop
+						dist :=
+							math.abs(row_index - world.player_base_row) +
+							math.abs(column_index - world.player_base_column)
+						if dist < best_dist {
+							best_dist = dist
+							best_row = row_index
+							best_col = column_index
+						}
 					}
 				}
 			}
+		}
+		if best_row != -1 {
+			world_move_unit_to_tile(world, active_unit_index, best_row, best_col)
+			unit_has_completed_action = true
 		}
 	}
 
@@ -448,7 +503,7 @@ world_draw_spawn_buttons :: proc(
 		},
 	}
 
-	button_labels := [3]cstring{"Wizard (50)", "Footman (20)", "Peasant (10)"}
+	button_labels := [3]cstring{"Tank (50)", "Footman (20)", "Peasant (10)"}
 	unit_costs := [3]i32{50, 20, 10}
 
 	base_button_style := Button_Style {
@@ -474,7 +529,7 @@ world_draw_spawn_buttons :: proc(
 
 		if button(button_rectangles[index], button_labels[index], current_style) &&
 		   world.player_money >= unit_costs[index] {
-			if index == 0 do world_spawn_unit(world, .Wizard)
+			if index == 0 do world_spawn_unit(world, .Tank)
 			if index == 1 do world_spawn_unit(world, .Footman)
 			if index == 2 do world_spawn_unit(world, .Peasant)
 		}
@@ -639,7 +694,6 @@ world_update :: proc(world: ^World, game_state: ^Game_State) {
 		{0, 0, 0, 0},
 	)
 
-	// REPLACED: Star rendering loop with menu screen-space background grid effects
 	grid_size :: 60
 	grid_color := raylib.Color{255, 255, 255, 10}
 
@@ -730,6 +784,7 @@ world_update :: proc(world: ^World, game_state: ^Game_State) {
 			window_width_float / 2,
 			hud_rectangle.y + 44 * ui_scale,
 		}
+
 		if world.current_turn == .Player {
 			pulse_alpha_value := u8(200 + 55 * f32(math.sin(elapsed_time * 4.0)))
 			draw_text(
@@ -748,6 +803,30 @@ world_update :: proc(world: ^World, game_state: ^Game_State) {
 				.Center,
 				tint = raylib.Color{50, 220, 110, pulse_alpha_value},
 			)
+
+			enter_text: cstring = "PRESS [ENTER] TO END TURN"
+			enter_font_size := 16 * ui_scale
+			enter_text_pos := linalg.Vector2f32 {
+				window_width_float - (140 * ui_scale),
+				window_height_float - (24 * ui_scale),
+			}
+			draw_text(
+				enter_text,
+				enter_text_pos + {2 * ui_scale, 2 * ui_scale},
+				default_font,
+				enter_font_size,
+				.Center,
+				tint = raylib.Color{10, 10, 15, 180},
+			)
+			draw_text(
+				enter_text,
+				enter_text_pos,
+				default_font,
+				enter_font_size,
+				.Center,
+				tint = raylib.Color{200, 200, 220, pulse_alpha_value},
+			)
+
 		} else {
 			draw_text(
 				"ENEMY ACTION...",

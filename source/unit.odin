@@ -7,7 +7,7 @@ import "vendor:raylib"
 Unit_Kind :: enum {
     Peasant,
     Footman,
-    Wizard,
+    Tank,
 }
 
 Unit :: struct {
@@ -24,7 +24,7 @@ unit_cost :: proc(kind: Unit_Kind) -> i32 {
     switch kind {
     case .Peasant: return 10
     case .Footman: return 20
-    case .Wizard:  return 50
+    case .Tank:  return 50
     }
     return 10
 }
@@ -33,7 +33,7 @@ unit_combat_power :: proc(kind: Unit_Kind) -> i32 {
     switch kind {
     case .Peasant: return 1
     case .Footman: return 2
-    case .Wizard:  return 3
+    case .Tank:  return 3
     }
     return 1
 }
@@ -43,22 +43,26 @@ unit_texture_for :: proc(unit: Unit, assets: ^Assets) -> raylib.Texture2D {
         switch unit.kind {
         case .Footman: return assets.blue_footman
         case .Peasant: return assets.blue_peasant
-        case .Wizard:  return assets.blue_wizard
+        case .Tank:  return assets.blue_wizard
         }
     }
 
     switch unit.kind {
     case .Footman: return assets.red_footman
     case .Peasant: return assets.red_peasant
-    case .Wizard:  return assets.red_wizard
+    case .Tank:  return assets.red_wizard
     }
     return assets.blue_peasant
 }
 
 unit_draw :: proc(unit: Unit, assets: ^Assets) {
     texture := unit_texture_for(unit, assets)
-    draw_texture(texture, raylib.Rectangle{0, 0, f32(texture.width), f32(texture.height)}, unit.position, .Center, scale = {2, 2})
-    
+    if unit.kind == .Peasant || unit.kind == .Footman {
+        draw_texture(texture, raylib.Rectangle{0, 0, f32(texture.width), f32(texture.height)}, unit.position, .Center, scale = {2, 2})
+    }
+    else {
+        draw_texture(texture, raylib.Rectangle{0, 0, f32(texture.width), f32(texture.height)}, unit.position, .Center, scale = {1, 1})
+    }
     if unit.has_moved {
         raylib.DrawCircleV(unit.position + {20, -20}, 4, raylib.GRAY)
     }

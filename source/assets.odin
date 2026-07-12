@@ -24,12 +24,12 @@ assets_init :: proc(assets: ^Assets) {
 	assets.kenney_hexagon_sheet = raylib.LoadTexture("assets/kenney_hexagon_sheet.png")
 	assets.ginger_bill = raylib.LoadTexture("assets/ginger_bill.png")
 
-	assets.blue_footman = raylib.LoadTexture("assets/kenney_medieval_rts/blue_footman.png")
-	assets.blue_peasant = raylib.LoadTexture("assets/kenney_medieval_rts/blue_peasant.png")
-	assets.blue_wizard = raylib.LoadTexture("assets/kenney_medieval_rts/blue_wizard.png")
-	assets.red_footman = raylib.LoadTexture("assets/kenney_medieval_rts/red_footman.png")
-	assets.red_peasant = raylib.LoadTexture("assets/kenney_medieval_rts/red_peasant.png")
-	assets.red_wizard = raylib.LoadTexture("assets/kenney_medieval_rts/red_wizard.png")
+	assets.blue_footman = raylib.LoadTexture("assets/kenney_scifi_rts/blue_footman.png")
+	assets.blue_peasant = raylib.LoadTexture("assets/kenney_scifi_rts/blue_peasant.png")
+	assets.blue_wizard = raylib.LoadTexture("assets/kenney_scifi_rts/blue_tank.png")
+	assets.red_footman = raylib.LoadTexture("assets/kenney_scifi_rts/red_footman.png")
+	assets.red_peasant = raylib.LoadTexture("assets/kenney_scifi_rts/red_peasant.png")
+	assets.red_wizard = raylib.LoadTexture("assets/kenney_scifi_rts/red_tank.png")
 
 	assets.game_music = raylib.LoadMusicStream("assets/menu_music.ogg")
 	assets.game_music.looping = true
