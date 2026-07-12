@@ -15,6 +15,7 @@ init :: proc() {
 	run = true
 	raylib.SetConfigFlags({.WINDOW_RESIZABLE, .VSYNC_HINT})
 	raylib.InitWindow(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT, WINDOW_TITLE)
+	raylib.SetExitKey(raylib.KeyboardKey.KEY_NULL)
 	raylib.SetGesturesEnabled({raylib.Gestures.PINCH_IN, raylib.Gestures.PINCH_OUT})
 	raylib.InitAudioDevice()
 	game_state_init(&game_state)

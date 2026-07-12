@@ -26,12 +26,6 @@ Tile_Kind :: enum {
     Western_Station, Western_Watertower,
 }
 
-Team :: enum {
-    None,
-    Player,
-    Enemy,
-}
-
 tile_kind_to_source := [Tile_Kind]raylib.Rectangle{
     .Dirt_06 = DIRT_06_SOURCE, .Dirt_11 = DIRT_11_SOURCE, .Dirt_12 = DIRT_12_SOURCE, 
     .Dirt_13 = DIRT_13_SOURCE, .Dirt_14 = DIRT_14_SOURCE, .Dirt_15 = DIRT_15_SOURCE, 
@@ -93,12 +87,12 @@ tile_kind_to_source := [Tile_Kind]raylib.Rectangle{
 }
 
 Tile :: struct {
-	kind: Tile_Kind,
-	team: Team,
+    kind: Tile_Kind,
+    team: Team,
 }
 
 tile_init_procedural :: proc(tile: ^Tile, elevation: f32) {
-	tile.team = .None
+    tile.team = .None
     stone_pool := [1]Tile_Kind{ .Stone_07 }
     sand_pool  := [8]Tile_Kind{ .Sand_07, .Sand_12, .Sand_13, .Sand_14, .Sand_15, .Sand_16, .Sand_17, .Sand_18 }
     grass_pool := [8]Tile_Kind{ .Grass_05, .Grass_10, .Grass_11, .Grass_12, .Grass_13, .Grass_14, .Grass_15, .Grass_16 }

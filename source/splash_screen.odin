@@ -58,7 +58,7 @@ splash_screen_update :: proc(splash: ^Splash_Screen, game_state: ^Game_State) {
         update_fade(&color, splash.timer, ODIN_SCREEN_START, ODIN_SCREEN_END, TRANSITION_TIME)
 
         font_size := i32(math.round(40 * scale))
-        text_pos := linalg.Vector2f32{screen_center.x, screen_center.y - (140 * scale)}
+        text_pos := linalg.Vector2f32{screen_center.x, screen_center.y - (200 * scale)}
         draw_text("Made with Odin and Raylib", text_pos, raylib.GetFontDefault(), f32(font_size), .Center, tint = color)
 
         source := raylib.Rectangle{
